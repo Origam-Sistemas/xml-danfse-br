@@ -1,4 +1,4 @@
-package br.com.nfse.danfse;
+package br.com.xmldanfse;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

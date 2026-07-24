@@ -1,4 +1,4 @@
-package br.com.nfse.danfse;
+package br.com.xmldanfse;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -35,13 +35,13 @@ public final class MunicipioResolver {
 
     /**
      * Retorna "Cidade - UF" para o código IBGE, ou vazio se não resolver (offline/desconhecido).
-     * Desative a consulta ao IBGE com {@code -Dnfse.danfse.ibge=false} (modo offline).
+     * Desative a consulta ao IBGE com {@code -Dxmldanfse.ibge=false} (modo offline).
      */
     public static Optional<String> resolver(String codigoMunicipio) {
         if (codigoMunicipio == null || !codigoMunicipio.matches("\\d{7}")) {
             return Optional.empty();
         }
-        if ("false".equalsIgnoreCase(System.getProperty("nfse.danfse.ibge"))) {
+        if ("false".equalsIgnoreCase(System.getProperty("xmldanfse.ibge"))) {
             return Optional.empty();
         }
         String cached = CACHE.get(codigoMunicipio);

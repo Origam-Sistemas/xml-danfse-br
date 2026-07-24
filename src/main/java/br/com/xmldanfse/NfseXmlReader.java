@@ -1,4 +1,4 @@
-package br.com.nfse.danfse;
+package br.com.xmldanfse;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;

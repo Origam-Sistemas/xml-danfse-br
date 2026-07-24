@@ -1,4 +1,4 @@
-package br.com.nfse.danfse;
+package br.com.xmldanfse;
 
 /**
  * Configuração opcional do DANFSe: identificação do município (brasão + contato da prefeitura) e o

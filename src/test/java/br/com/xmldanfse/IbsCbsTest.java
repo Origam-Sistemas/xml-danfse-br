@@ -1,4 +1,4 @@
-package br.com.nfse.danfse;
+package br.com.xmldanfse;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

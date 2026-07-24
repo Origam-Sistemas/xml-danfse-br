@@ -1,4 +1,4 @@
-# Avisos de terceiros — nfse-danfse
+# Avisos de terceiros — xml-danfse-br
 
 ## Logo da NFS-e
 
@@ -14,7 +14,7 @@ Nota Técnica SE/CGNFS-e nº 008/2026.
 
 Para resolver o nome de municípios que não vêm nomeados no XML, este módulo consulta a API pública
 de localidades do IBGE (`servicodados.ibge.gov.br`) em tempo de geração, com cache em memória e
-fallback gracioso ao código. Desative com `-Dnfse.danfse.ibge=false` (geração 100% offline).
+fallback gracioso ao código. Desative com `-Dxmldanfse.ibge=false` (geração 100% offline).
 
 ## Dependências de runtime
 

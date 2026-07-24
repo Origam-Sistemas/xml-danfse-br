@@ -1,4 +1,4 @@
-package br.com.nfse.danfse;
+package br.com.xmldanfse;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;

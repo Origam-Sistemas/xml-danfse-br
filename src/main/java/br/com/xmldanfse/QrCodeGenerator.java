@@ -1,4 +1,4 @@
-package br.com.nfse.danfse;
+package br.com.xmldanfse;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
