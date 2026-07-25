@@ -14,21 +14,21 @@ import javax.imageio.ImageIO;
 /**
  * Gera o QR Code do DANFSe como PNG embutido em data URI (para o template HTML).
  *
- * <p>O QR aponta para a consulta publica da NFS-e pela chave de acesso. A URL varia por ambiente
- * (producao x producao restrita). A NT 008 e a fonte normativa do conteudo exato; aqui usamos a
- * URL de consulta publica conhecida, que pode ser sobrescrita.
+ * <p>O QR aponta para a consulta publica da NFS-e pela chave de acesso, no endereco definido
+ * pelo item 2.4.3 da NT 008/2026 ({@code https://www.nfse.gov.br/ConsultaPublica/?tpc=1&chave=}).
+ * Em homologacao (producao restrita) usa o host correspondente.
  */
 public final class QrCodeGenerator {
 
     public static final String CONSULTA_PRODUCAO =
-        "https://www.nfse.gov.br/consultapublica";
+        "https://www.nfse.gov.br/ConsultaPublica/";
     public static final String CONSULTA_HOMOLOGACAO =
-        "https://www.producaorestrita.nfse.gov.br/consultapublica";
+        "https://www.producaorestrita.nfse.gov.br/ConsultaPublica/";
 
     private QrCodeGenerator() {
     }
 
-    /** URL de consulta publica (sem parametros) para a chave informada, por ambiente. */
+    /** URL de consulta publica (conforme NT 008, item 2.4.3) para a chave informada, por ambiente. */
     public static String consultaUrl(String chaveAcesso, boolean producao) {
         String base = producao ? CONSULTA_PRODUCAO : CONSULTA_HOMOLOGACAO;
         return base + "?tpc=1&chave=" + chaveAcesso;

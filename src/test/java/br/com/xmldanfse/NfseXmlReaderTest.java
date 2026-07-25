@@ -63,10 +63,27 @@ class NfseXmlReaderTest {
         assertEquals("010101", d.servico().codigoTributacaoNacional());
         assertEquals("001", d.servico().codigoTributacaoMunicipal());
         assertEquals("Servico municipal ficticio.", d.servico().descricaoTributacaoMunicipal());
-        assertEquals("Operacao Tributavel", d.servico().tributacaoIssqn());
-        assertEquals("Nao Retido", d.servico().tipoRetencaoIssqn());
+        assertEquals("Operacao Tributavel", d.tributacaoMunicipal().tipoTributacaoIssqn());
+        assertEquals("Nao Retido", d.tributacaoMunicipal().retencaoIssqn());
+        assertEquals("Nenhum", d.tributacaoMunicipal().regimeEspecial());
         assertEquals(0, d.valores().valorServico().compareTo(new BigDecimal("250.00")));
         assertEquals(0, d.valores().valorLiquido().compareTo(new BigDecimal("250.00")));
+    }
+
+    @Test
+    void extraiTotaisAproximadosDoSimplesNacional() throws Exception {
+        Danfse.TotaisTributos t = NfseXmlReader.read(xmlExemplo()).totaisTributos();
+        assertEquals(0, t.percentualSimplesNacional().compareTo(new BigDecimal("6.00")));
+        assertFalse(t.naoInformado());
+    }
+
+    @Test
+    void extraiCamposDoCabecalhoEIdentificacao() throws Exception {
+        Danfse.Identificacao id = NfseXmlReader.read(xmlExemplo()).identificacao();
+        assertEquals("Prestador", id.emitente());
+        assertEquals("Ambiente Nacional", id.ambienteGerador());
+        assertEquals("Producao Restrita", id.tipoAmbiente());
+        assertEquals("107", id.situacao());
     }
 
     @Test
