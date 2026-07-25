@@ -108,6 +108,9 @@
                 <version>3.4.2</version>
                 <configuration>
                     <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
                         <manifestEntries>
                             <Automatic-Module-Name>br.com.xmldanfse</Automatic-Module-Name>
                         </manifestEntries>
@@ -214,6 +217,18 @@
                                     <transformers>
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                             <mainClass>br.com.xmldanfse.Main</mainClass>
+                                        </transformer>
+                                        <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                            <resource>META-INF/LICENSE-xml-danfse-br.txt</resource>
+                                            <file>LICENSE</file>
+                                        </transformer>
+                                        <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                            <resource>META-INF/NOTICE-xml-danfse-br.md</resource>
+                                            <file>NOTICE.md</file>
+                                        </transformer>
+                                        <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                            <resource>META-INF/THIRD-PARTY.md</resource>
+                                            <file>THIRD-PARTY.md</file>
                                         </transformer>
                                     </transformers>
                                 </configuration>
