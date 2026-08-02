@@ -29,7 +29,8 @@ jobs:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn -B -Prelease clean deploy
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: mvn -B -Prelease -Dgpg.keyname=117CB12CC98DFC69 clean deploy
       - name: Gerar fat-jar da CLI
         run: mvn -B -Pcli -DskipTests package
       - name: Criar GitHub Release com a CLI
