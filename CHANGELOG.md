@@ -3,6 +3,7 @@
 ## 0.9.0-origam-20260827 — 2026-08-27
 
 ### Novidades
+- Coordenada Maven do fork alterada para `br.com.origam:xml-danfse-br` e publicada no Repsy.
 - Situação atual explícita por `DanfseSituacao.NORMAL`, `CANCELADA` ou `SUBSTITUIDA`, preservando
   todas as assinaturas públicas existentes.
 - Marcas d'água diagonais "CANCELADA" e "SUBSTITUÍDA" sobrepostas ao PDF conforme a NT 008/2026.

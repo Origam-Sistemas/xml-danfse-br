@@ -17,7 +17,7 @@ O OpenHTMLtoPDF e agregado neste fat-jar SEM modificacoes, apenas por convenienc
 distribuicao da CLI. Os jars originais estao disponiveis no Maven Central
 (`com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10`); qualquer pessoa pode reconstruir este
 fat-jar substituindo a versao da biblioteca (build: `mvn -Pcli package` no repositorio
-https://github.com/rzmt/xml-danfse-br), o que atende ao requisito de reversibilidade da LGPL.
+https://github.com/Origam-Sistemas/xml-danfse-br), o que atende ao requisito de reversibilidade da LGPL.
 
-A biblioteca `io.github.rzmt:xml-danfse-br` publicada no Maven Central e MIT pura e declara
+A biblioteca `br.com.origam:xml-danfse-br` publicada no Repsy e MIT pura e declara
 o OpenHTMLtoPDF apenas como dependencia (link dinamico), sem agregacao.

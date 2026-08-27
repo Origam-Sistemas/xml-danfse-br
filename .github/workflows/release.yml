@@ -19,18 +19,14 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-          server-id: central
-          server-username: CENTRAL_USERNAME
-          server-password: CENTRAL_PASSWORD
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: GPG_PASSPHRASE
-      - name: Publicar no Maven Central
+          server-id: repsy
+          server-username: REPSY_USERNAME
+          server-password: REPSY_PASSWORD
+      - name: Publicar no Repsy
         env:
-          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
-          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn -B -Prelease -Dgpg.keyname=117CB12CC98DFC69 clean deploy
+          REPSY_USERNAME: ${{ secrets.REPSY_USERNAME }}
+          REPSY_PASSWORD: ${{ secrets.REPSY_PASSWORD }}
+        run: mvn -B clean deploy
       - name: Gerar fat-jar da CLI
         run: mvn -B -Pcli -DskipTests package
       - name: Criar GitHub Release com a CLI
