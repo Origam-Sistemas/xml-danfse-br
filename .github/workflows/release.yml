@@ -41,5 +41,5 @@ jobs:
           cp target/xml-danfse-br-cli.jar "xml-danfse-br-cli-${VERSION}.jar"
           gh release create "${GITHUB_REF_NAME}" \
             --title "${GITHUB_REF_NAME}" \
-            --notes "Biblioteca no Maven Central: io.github.rzmt:xml-danfse-br:${VERSION}. O jar anexo e a CLI standalone (java -jar). Veja o CHANGELOG.md." \
+            --notes "Biblioteca: br.com.origam:xml-danfse-br:${VERSION}. O jar anexo e a CLI standalone (java -jar). Veja o CHANGELOG.md." \
             "xml-danfse-br-cli-${VERSION}.jar"

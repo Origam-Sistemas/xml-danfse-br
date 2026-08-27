@@ -5,8 +5,8 @@
 > Fork mantido pela Origam Sistemas, com suporte explícito às situações de cancelamento e
 > substituição. Código original: [`rzmt/xml-danfse-br`](https://github.com/rzmt/xml-danfse-br).
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.rzmt/xml-danfse-br)](https://central.sonatype.com/artifact/io.github.rzmt/xml-danfse-br)
-[![CI](https://github.com/rzmt/xml-danfse-br/actions/workflows/ci.yml/badge.svg)](https://github.com/rzmt/xml-danfse-br/actions/workflows/ci.yml)
+[![Repsy](https://img.shields.io/badge/Repsy-br.com.origam%3Axml--danfse--br-blue)](https://repsy.io/mvn/origam/default)
+[![CI](https://github.com/Origam-Sistemas/xml-danfse-br/actions/workflows/ci.yml/badge.svg)](https://github.com/Origam-Sistemas/xml-danfse-br/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Java 17+](https://img.shields.io/badge/Java-17%2B-orange)
 
@@ -32,7 +32,7 @@ seus com a CLI abaixo.
 </repository>
 
 <dependency>
-    <groupId>io.github.rzmt</groupId>
+    <groupId>br.com.origam</groupId>
     <artifactId>xml-danfse-br</artifactId>
     <version>0.9.0-origam-20260827</version>
 </dependency>
@@ -40,7 +40,7 @@ seus com a CLI abaixo.
 
 ```kotlin
 // Gradle
-implementation("io.github.rzmt:xml-danfse-br:0.9.0-origam-20260827")
+implementation("br.com.origam:xml-danfse-br:0.9.0-origam-20260827")
 ```
 
 ## Uso
