@@ -5,12 +5,12 @@
 
     <groupId>io.github.rzmt</groupId>
     <artifactId>xml-danfse-br</artifactId>
-    <version>0.9.0</version>
+    <version>0.9.0-origam-20260827</version>
     <packaging>jar</packaging>
 
     <name>xml-danfse-br</name>
     <description>Gera o DANFSe (PDF) localmente a partir do XML autorizado da NFS-e Nacional (NT 008/2026).</description>
-    <url>https://github.com/rzmt/xml-danfse-br</url>
+    <url>https://github.com/Origam-Sistemas/xml-danfse-br</url>
 
     <licenses>
         <license>
@@ -28,10 +28,18 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/rzmt/xml-danfse-br.git</connection>
-        <developerConnection>scm:git:git@github.com:rzmt/xml-danfse-br.git</developerConnection>
-        <url>https://github.com/rzmt/xml-danfse-br</url>
+        <connection>scm:git:https://github.com/Origam-Sistemas/xml-danfse-br.git</connection>
+        <developerConnection>scm:git:git@github.com:Origam-Sistemas/xml-danfse-br.git</developerConnection>
+        <url>https://github.com/Origam-Sistemas/xml-danfse-br</url>
     </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>repsy</id>
+            <name>Repositório Origam Sistemas no Repsy</name>
+            <url>https://repo.repsy.io/mvn/origam/default</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>

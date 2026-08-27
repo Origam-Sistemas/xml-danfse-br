@@ -2,6 +2,9 @@
 
 **Converte o XML autorizado da NFS-e Nacional no PDF do DANFSe — 100% local, seguindo o modelo oficial da NT 008/2026.**
 
+> Fork mantido pela Origam Sistemas, com suporte explícito às situações de cancelamento e
+> substituição. Código original: [`rzmt/xml-danfse-br`](https://github.com/rzmt/xml-danfse-br).
+
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.rzmt/xml-danfse-br)](https://central.sonatype.com/artifact/io.github.rzmt/xml-danfse-br)
 [![CI](https://github.com/rzmt/xml-danfse-br/actions/workflows/ci.yml/badge.svg)](https://github.com/rzmt/xml-danfse-br/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -23,16 +26,21 @@ seus com a CLI abaixo.
 ## Instalação (biblioteca Java)
 
 ```xml
+<repository>
+    <id>repsy</id>
+    <url>https://repo.repsy.io/mvn/origam/default</url>
+</repository>
+
 <dependency>
     <groupId>io.github.rzmt</groupId>
     <artifactId>xml-danfse-br</artifactId>
-    <version>0.9.0</version>
+    <version>0.9.0-origam-20260827</version>
 </dependency>
 ```
 
 ```kotlin
 // Gradle
-implementation("io.github.rzmt:xml-danfse-br:0.9.0")
+implementation("io.github.rzmt:xml-danfse-br:0.9.0-origam-20260827")
 ```
 
 ## Uso
@@ -70,7 +78,7 @@ e interpretar os eventos da NFS-e.
 
 ## CLI (qualquer linguagem/sistema)
 
-Baixe o `xml-danfse-br-cli-<versão>.jar` em [Releases](https://github.com/rzmt/xml-danfse-br/releases)
+Baixe o `xml-danfse-br-cli-<versão>.jar` em [Releases](https://github.com/Origam-Sistemas/xml-danfse-br/releases)
 — não precisa de Maven, só Java 17+:
 
 ```bash

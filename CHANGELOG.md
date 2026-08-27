@@ -1,6 +1,6 @@
 # Changelog
 
-## Não publicado
+## 0.9.0-origam-20260827 — 2026-08-27
 
 ### Novidades
 - Situação atual explícita por `DanfseSituacao.NORMAL`, `CANCELADA` ou `SUBSTITUIDA`, preservando
