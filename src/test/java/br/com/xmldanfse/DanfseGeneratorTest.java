@@ -3,6 +3,7 @@ package br.com.xmldanfse;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -72,5 +73,31 @@ class DanfseGeneratorTest {
         DanfseGenerator.gerarPdf(NfseXmlReaderTest.xmlExemplo(), false, saida);
         assertTrue(java.nio.file.Files.exists(saida));
         assertTrue(java.nio.file.Files.size(saida) > 1000);
+    }
+
+    @Test
+    void situacaoAtualControlaMarcaDaguaSemDependerDoStatusDoXml() throws Exception {
+        String xml = NfseXmlReaderTest.xmlExemplo();
+
+        String normal = pdfTexto(DanfseGenerator.gerarPdf(xml));
+        String cancelada = pdfTexto(DanfseGenerator.gerarPdf(xml, DanfseSituacao.CANCELADA));
+        String substituida = pdfTexto(DanfseGenerator.gerarPdf(xml, DanfseSituacao.SUBSTITUIDA));
+
+        assertFalse(normal.contains("CANCELADA"));
+        assertFalse(normal.contains("SUBSTITUÍDA"));
+        assertTrue(semEspacos(cancelada).contains("CANCELADA"));
+        // O extrator do PDF separa a ligacao visual U+Í, por isso validamos o prefixo estavel.
+        assertTrue(semEspacos(substituida).contains("SUBSTIT"));
+    }
+
+    @Test
+    void situacaoExplicitaNaoAceitaNulo() {
+        assertThrows(NullPointerException.class,
+            () -> DanfseGenerator.gerarPdf(NfseXmlReaderTest.xmlExemplo(), (DanfseSituacao) null));
+    }
+
+    private static String semEspacos(String texto) {
+        // O PDFTextStripper quebra palavras rotacionadas em linhas; a marca segue legivel no PDF.
+        return texto.replaceAll("\\s", "");
     }
 }

@@ -2,6 +2,7 @@ package br.com.xmldanfse;
 
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +10,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
 import java.util.Objects;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState;
+import org.apache.pdfbox.util.Matrix;
 
 /**
  * Facade do modulo: gera o PDF do DANFSe a partir do XML autorizado da NFS-e, conforme o modelo
@@ -31,28 +39,55 @@ public final class DanfseGenerator {
      * homologacao e estampa "NFS-e SEM VALIDADE JURIDICA".
      */
     public static byte[] gerarPdf(String nfseXml) {
-        return gerarPdf(nfseXml, DanfseConfig.vazio());
+        return gerarPdf(nfseXml, DanfseSituacao.NORMAL, DanfseConfig.vazio());
     }
 
     /** Como {@link #gerarPdf(String)}, com configuracao opcional (logo do emitente etc.). */
     public static byte[] gerarPdf(String nfseXml, DanfseConfig config) {
+        return gerarPdf(nfseXml, DanfseSituacao.NORMAL, config);
+    }
+
+    /**
+     * Como {@link #gerarPdf(String)}, considerando a situacao atual obtida nos eventos da NFS-e.
+     * Notas canceladas ou substituidas recebem a marca d'agua exigida pela NT 008/2026.
+     */
+    public static byte[] gerarPdf(String nfseXml, DanfseSituacao situacao) {
+        return gerarPdf(nfseXml, situacao, DanfseConfig.vazio());
+    }
+
+    /** Como {@link #gerarPdf(String, DanfseSituacao)}, com configuracao opcional. */
+    public static byte[] gerarPdf(String nfseXml, DanfseSituacao situacao, DanfseConfig config) {
         Objects.requireNonNull(nfseXml, "nfseXml is required");
+        Objects.requireNonNull(situacao, "situacao is required");
         Danfse danfse = NfseXmlReader.read(nfseXml);
-        return gerar(danfse, !danfse.homologacao(), config);
+        return gerar(danfse, !danfse.homologacao(), config, situacao);
     }
 
     /** Gera o PDF do DANFSe a partir do XML da NFS-e. {@code producao} controla a URL do QR. */
     public static byte[] gerarPdf(String nfseXml, boolean producao) {
-        return gerarPdf(nfseXml, producao, DanfseConfig.vazio());
+        return gerarPdf(nfseXml, producao, DanfseSituacao.NORMAL, DanfseConfig.vazio());
     }
 
     /** Como {@link #gerarPdf(String, boolean)}, com identificacao opcional do municipio. */
     public static byte[] gerarPdf(String nfseXml, boolean producao, DanfseConfig config) {
-        Objects.requireNonNull(nfseXml, "nfseXml is required");
-        return gerar(NfseXmlReader.read(nfseXml), producao, config);
+        return gerarPdf(nfseXml, producao, DanfseSituacao.NORMAL, config);
     }
 
-    private static byte[] gerar(Danfse danfse, boolean producao, DanfseConfig config) {
+    /** Como {@link #gerarPdf(String, boolean)}, considerando a situacao atual da NFS-e. */
+    public static byte[] gerarPdf(String nfseXml, boolean producao, DanfseSituacao situacao) {
+        return gerarPdf(nfseXml, producao, situacao, DanfseConfig.vazio());
+    }
+
+    /** Como {@link #gerarPdf(String, boolean, DanfseSituacao)}, com configuracao opcional. */
+    public static byte[] gerarPdf(String nfseXml, boolean producao, DanfseSituacao situacao,
+            DanfseConfig config) {
+        Objects.requireNonNull(nfseXml, "nfseXml is required");
+        Objects.requireNonNull(situacao, "situacao is required");
+        return gerar(NfseXmlReader.read(nfseXml), producao, config, situacao);
+    }
+
+    private static byte[] gerar(Danfse danfse, boolean producao, DanfseConfig config,
+            DanfseSituacao situacao) {
         // QR em bitmap de 300 px para nitidez de impressao; o CSS fixa 1,52 x 1,52 cm (NT 008).
         String qr = danfse.chaveAcesso() == null
             ? null
@@ -70,7 +105,7 @@ public final class DanfseGenerator {
             builder.withHtmlContent(html, null);
             builder.toStream(out);
             builder.run();
-            return out.toByteArray();
+            return aplicarMarcaDagua(out.toByteArray(), situacao);
         } catch (Exception exception) {
             throw new DanfseException("Nao foi possivel gerar o PDF do DANFSe.", exception);
         }
@@ -86,10 +121,76 @@ public final class DanfseGenerator {
         return gravar(gerarPdf(nfseXml, producao, config), saida);
     }
 
+    /** Como {@link #gerarPdf(String, boolean, DanfseSituacao)}, gravando no caminho informado. */
+    public static byte[] gerarPdf(String nfseXml, boolean producao, DanfseSituacao situacao,
+            Path saida) {
+        return gerarPdf(nfseXml, producao, situacao, DanfseConfig.vazio(), saida);
+    }
+
+    /** Como {@link #gerarPdf(String, boolean, DanfseSituacao, DanfseConfig)}, gravando em arquivo. */
+    public static byte[] gerarPdf(String nfseXml, boolean producao, DanfseSituacao situacao,
+            DanfseConfig config, Path saida) {
+        Objects.requireNonNull(saida, "saida is required");
+        return gravar(gerarPdf(nfseXml, producao, situacao, config), saida);
+    }
+
     /** Como {@link #gerarPdf(String, DanfseConfig)}, gravando no caminho informado. */
     public static byte[] gerarPdf(String nfseXml, DanfseConfig config, Path saida) {
         Objects.requireNonNull(saida, "saida is required");
         return gravar(gerarPdf(nfseXml, config), saida);
+    }
+
+    /** Como {@link #gerarPdf(String, DanfseSituacao)}, gravando no caminho informado. */
+    public static byte[] gerarPdf(String nfseXml, DanfseSituacao situacao, Path saida) {
+        return gerarPdf(nfseXml, situacao, DanfseConfig.vazio(), saida);
+    }
+
+    /** Como {@link #gerarPdf(String, DanfseSituacao, DanfseConfig)}, gravando em arquivo. */
+    public static byte[] gerarPdf(String nfseXml, DanfseSituacao situacao, DanfseConfig config,
+            Path saida) {
+        Objects.requireNonNull(saida, "saida is required");
+        return gravar(gerarPdf(nfseXml, situacao, config), saida);
+    }
+
+    private static byte[] aplicarMarcaDagua(byte[] pdf, DanfseSituacao situacao) throws IOException {
+        String texto = situacao.marcaDagua();
+        if (texto == null) {
+            return pdf;
+        }
+
+        try (PDDocument document = PDDocument.load(pdf);
+             InputStream fonte = fonte("LiberationSans-Bold.ttf");
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            PDType0Font font = PDType0Font.load(document, fonte, true);
+            for (PDPage page : document.getPages()) {
+                aplicarMarcaDagua(document, page, font, texto);
+            }
+            document.save(out);
+            return out.toByteArray();
+        }
+    }
+
+    private static void aplicarMarcaDagua(PDDocument document, PDPage page, PDType0Font font,
+            String texto) throws IOException {
+        float fontSize = 72f;
+        float larguraTexto = font.getStringWidth(texto) / 1000f * fontSize;
+        float centroX = page.getCropBox().getLowerLeftX() + page.getCropBox().getWidth() / 2f;
+        float centroY = page.getCropBox().getLowerLeftY() + page.getCropBox().getHeight() / 2f;
+
+        PDExtendedGraphicsState transparencia = new PDExtendedGraphicsState();
+        transparencia.setNonStrokingAlphaConstant(0.32f);
+
+        try (PDPageContentStream content = new PDPageContentStream(document, page,
+                AppendMode.APPEND, true, true)) {
+            content.setGraphicsStateParameters(transparencia);
+            content.setNonStrokingColor(new Color(128, 128, 128));
+            content.beginText();
+            content.setFont(font, fontSize);
+            content.setTextMatrix(Matrix.getRotateInstance(Math.toRadians(45), centroX, centroY));
+            content.newLineAtOffset(-larguraTexto / 2f, -fontSize / 3f);
+            content.showText(texto);
+            content.endText();
+        }
     }
 
     private static byte[] gravar(byte[] pdf, Path saida) {

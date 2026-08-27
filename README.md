@@ -52,6 +52,22 @@ String logo = DanfseGenerator.dataUriImagem(Path.of("logo.png")); // PNG/JPG/SVG
 byte[] pdf = DanfseGenerator.gerarPdf(xml, DanfseConfig.comLogoEmitente(logo));
 ```
 
+### NFS-e cancelada ou substituída
+
+O cancelamento e a substituição são eventos vinculados no ADN e não alteram o status do XML
+autorizado original. Depois de consultar esses eventos, informe a situação atual ao renderizador:
+
+```java
+import br.com.xmldanfse.DanfseSituacao;
+
+byte[] cancelada = DanfseGenerator.gerarPdf(xml, DanfseSituacao.CANCELADA);
+byte[] substituida = DanfseGenerator.gerarPdf(xml, DanfseSituacao.SUBSTITUIDA);
+```
+
+Os métodos existentes sem situação continuam equivalentes a `DanfseSituacao.NORMAL`. A biblioteca
+não consulta o ADN nem exige certificado: a aplicação integradora continua responsável por obter
+e interpretar os eventos da NFS-e.
+
 ## CLI (qualquer linguagem/sistema)
 
 Baixe o `xml-danfse-br-cli-<versão>.jar` em [Releases](https://github.com/rzmt/xml-danfse-br/releases)
@@ -60,6 +76,8 @@ Baixe o `xml-danfse-br-cli-<versão>.jar` em [Releases](https://github.com/rzmt/
 ```bash
 java -jar xml-danfse-br-cli.jar nota.xml                      # gera nota.pdf ao lado
 java -jar xml-danfse-br-cli.jar nota.xml -o /tmp/danfse.pdf --logo-emitente logo.png
+java -jar xml-danfse-br-cli.jar nota.xml --cancelada
+java -jar xml-danfse-br-cli.jar nota.xml --substituida
 ```
 
 Útil para acoplar a sistemas PHP/Python/Node/legados via linha de comando enquanto o
@@ -99,8 +117,7 @@ Status detalhado item a item: [`docs/nt008-checklist.md`](docs/nt008-checklist.m
   prevê a própria NT. Suporte a anexo de continuação está no roadmap.
 - Campos `cStat`/`finNFSe`/`tpBM` exibem o código quando a tabela oficial de descrições não se
   aplica (detalhes no checklist).
-- Marca d'água "CANCELADA"/"SUBSTITUÍDA" (o XML autorizado sozinho não carrega essa informação):
-  roadmap.
+- ✅ Marca d'água "CANCELADA"/"SUBSTITUÍDA" quando a situação atual é informada explicitamente.
 - NT 009 (IBS/CBS) completa quando o novo cronograma for publicado; port npm/TypeScript planejado.
 
 ## Desenvolvimento

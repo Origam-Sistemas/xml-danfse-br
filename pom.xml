@@ -68,6 +68,11 @@
             <artifactId>openhtmltopdf-pdfbox</artifactId>
             <version>${openhtmltopdf.version}</version>
         </dependency>
+        <!-- Usado diretamente para sobrepor as marcas d'agua de cancelamento/substituicao. -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+        </dependency>
         <!-- QR Code (Apache-2.0). -->
         <dependency>
             <groupId>com.google.zxing</groupId>

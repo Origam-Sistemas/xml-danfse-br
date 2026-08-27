@@ -9,7 +9,8 @@ import java.nio.file.Path;
  *
  * <pre>
  * java -jar xml-danfse-br-cli.jar nota.xml [-o saida.pdf] [--logo-emitente logo.png]
- *      [--producao | --homologacao] [--municipio-nome "Nome - UF"] [-q]
+ *      [--producao | --homologacao] [--cancelada | --substituida]
+ *      [--municipio-nome "Nome - UF"] [-q]
  * </pre>
  *
  * <p>Sem {@code --producao}/{@code --homologacao}, o ambiente e inferido do {@code tpAmb} do
@@ -30,6 +31,7 @@ public final class Main {
         Path logoEmitente = null;
         String municipioNome = null;
         Boolean producao = null;
+        DanfseSituacao situacao = DanfseSituacao.NORMAL;
         boolean quiet = false;
 
         for (int i = 0; i < args.length; i++) {
@@ -63,6 +65,18 @@ public final class Main {
                 }
                 case "--producao" -> producao = true;
                 case "--homologacao" -> producao = false;
+                case "--cancelada" -> {
+                    if (situacao != DanfseSituacao.NORMAL) {
+                        return erroUso("informe apenas uma situacao: --cancelada ou --substituida");
+                    }
+                    situacao = DanfseSituacao.CANCELADA;
+                }
+                case "--substituida" -> {
+                    if (situacao != DanfseSituacao.NORMAL) {
+                        return erroUso("informe apenas uma situacao: --cancelada ou --substituida");
+                    }
+                    situacao = DanfseSituacao.SUBSTITUIDA;
+                }
                 case "-q", "--quiet" -> quiet = true;
                 default -> {
                     if (arg.startsWith("-")) {
@@ -94,8 +108,8 @@ public final class Main {
             DanfseConfig config = new DanfseConfig(municipioNome, null, null, null, null, logoDataUri);
 
             byte[] pdf = producao == null
-                ? DanfseGenerator.gerarPdf(xml, config, saida)
-                : DanfseGenerator.gerarPdf(xml, producao, config, saida);
+                ? DanfseGenerator.gerarPdf(xml, situacao, config, saida)
+                : DanfseGenerator.gerarPdf(xml, producao, situacao, config, saida);
 
             if (!quiet) {
                 System.out.println("DANFSe gerado: " + saida + " (" + pdf.length + " bytes)");
@@ -141,6 +155,8 @@ public final class Main {
               --producao                   forca URL de consulta do QR de producao
               --homologacao                forca URL de consulta de producao restrita
                                            (sem essas flags, o ambiente vem do tpAmb do XML)
+              --cancelada                  adiciona a marca d'agua CANCELADA
+              --substituida                adiciona a marca d'agua SUBSTITUÍDA
               -q, --quiet                  nao imprime mensagem de sucesso
               -h, --help                   esta ajuda
               -V, --version                versao

@@ -33,18 +33,21 @@ class GoldenPdfTest {
 
     @ParameterizedTest(name = "{0}")
     @CsvSource({
-        "ficticio,      /nfse-exemplo-ficticio.xml, false",
-        "ibscbs,        /nfse-exemplo-ibscbs.xml,   false",
-        "completo,      /nfse-exemplo-completo.xml, false",
-        "ficticio-logo, /nfse-exemplo-ficticio.xml, true",
+        "ficticio,           /nfse-exemplo-ficticio.xml, false, NORMAL",
+        "ibscbs,             /nfse-exemplo-ibscbs.xml,   false, NORMAL",
+        "completo,           /nfse-exemplo-completo.xml, false, NORMAL",
+        "ficticio-logo,      /nfse-exemplo-ficticio.xml, true,  NORMAL",
+        "ficticio-cancelada, /nfse-exemplo-ficticio.xml, false, CANCELADA",
+        "ficticio-substituida,/nfse-exemplo-ficticio.xml, false, SUBSTITUIDA",
     })
-    void danfseIgualAoGolden(String caso, String recurso, boolean comLogo) throws Exception {
+    void danfseIgualAoGolden(String caso, String recurso, boolean comLogo,
+            DanfseSituacao situacao) throws Exception {
         String xml;
         try (var in = GoldenPdfTest.class.getResourceAsStream(recurso)) {
             xml = new String(in.readAllBytes(), StandardCharsets.UTF_8);
         }
         DanfseConfig config = comLogo ? DanfseConfig.comLogoEmitente(logoSintetico()) : DanfseConfig.vazio();
-        byte[] pdf = DanfseGenerator.gerarPdf(xml, config);
+        byte[] pdf = DanfseGenerator.gerarPdf(xml, situacao, config);
         BufferedImage atual = PdfRaster.pagina(pdf, 0);
 
         Path referencia = Path.of("src/test/resources/golden", caso + ".png");

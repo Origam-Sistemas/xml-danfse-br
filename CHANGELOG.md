@@ -1,5 +1,14 @@
 # Changelog
 
+## Não publicado
+
+### Novidades
+- Situação atual explícita por `DanfseSituacao.NORMAL`, `CANCELADA` ou `SUBSTITUIDA`, preservando
+  todas as assinaturas públicas existentes.
+- Marcas d'água diagonais "CANCELADA" e "SUBSTITUÍDA" sobrepostas ao PDF conforme a NT 008/2026.
+- Flags `--cancelada` e `--substituida` na CLI.
+- Testes funcionais e golden-file para evitar regressões na marca d'água.
+
 ## 0.9.0 — 2026-07-25
 
 Primeira versão standalone, extraída do módulo `nfse-danfse` do
